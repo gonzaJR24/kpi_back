@@ -5,6 +5,7 @@ import com.medilink.kpi.Services.PuntajeService;
 import com.medilink.kpi.entities.Empleado;
 import com.medilink.kpi.entities.Puntaje;
 import com.medilink.kpi.entities.dto.PuntajeDTO;
+import com.medilink.kpi.entities.dto.PuntajeEditDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,5 +59,31 @@ public class PuntajeController {
     public ResponseEntity<?> deleteAll(){
         puntajeService.deleteAll();
         return ResponseEntity.status(200).body("deleted successfully");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> edit(@PathVariable int id, @RequestBody PuntajeEditDTO puntajeDTO){
+
+        if(puntajeDTO==null){
+            return ResponseEntity.status(400).body("Invalid or empty value");
+        }
+        Puntaje puntaje=puntajeService.findById(id);
+        puntaje.setAusenciaPuntualidad(puntajeDTO.ausenciaPuntualidad());
+        puntaje.setEspecifico1(puntajeDTO.especifico1());
+        puntaje.setEspecifico2(puntajeDTO.especifico2());
+        puntaje.setNps(puntajeDTO.nps());
+        puntaje.setActitudesGestionComportamiento(puntajeDTO.actitudesGestionComportamiento());
+        puntaje.setCalificacionLider(puntajeDTO.calificacionLider());
+
+        int sumaPuntajes=puntajeDTO.ausenciaPuntualidad()+puntajeDTO.especifico1()+puntajeDTO.especifico2()+puntajeDTO.nps()+
+                puntajeDTO.actitudesGestionComportamiento()+puntajeDTO.calificacionLider();
+
+        puntaje.setPuntajeTotal(sumaPuntajes);
+        puntaje.setComentario(puntajeDTO.comentario());
+//        puntaje.setEmpleado(empleadoService.findById(puntajeDTO.empleado()));
+        puntaje.setFechaEvaluacion(LocalDate.now());
+
+        puntajeService.save(puntaje);
+        return ResponseEntity.status(201).body(puntaje);
     }
 }

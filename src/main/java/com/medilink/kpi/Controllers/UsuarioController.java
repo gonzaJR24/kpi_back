@@ -78,14 +78,15 @@ public class UsuarioController {
         if(usuario==null){
             return ResponseEntity.status(404).body("User not found");
         }
-        usuario.setNombre_usuario(usuarioDTO.nombres());
+        usuario.setNombres(usuarioDTO.nombres());
         usuario.setApellidos(usuarioDTO.apellidos());
+        usuario.setNombre_usuario(usuarioDTO.nombreUsuario());
         usuario.setContrasena(usuarioDTO.contrasena());
         usuario.setCorreo(usuarioDTO.correo());
         usuario.setTipoUsuario(tipoUsuarioService.findById(usuarioDTO.tipoUsuario()));
         usuario.setSucursal(sucursalService.findById(usuarioDTO.sucursal()));
-
-        return ResponseEntity.status(200).body("Updated successfully");
+        usuarioService.save(usuario);
+        return ResponseEntity.status(200).body(usuario);
     }
 
 

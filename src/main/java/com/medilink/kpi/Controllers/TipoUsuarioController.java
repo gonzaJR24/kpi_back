@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tipo_usuario")
@@ -27,6 +29,14 @@ public class TipoUsuarioController {
     @GetMapping
     public List<TipoUsuario>list(){
         return tipoUsuarioService.list();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?>delete(@PathVariable int id){
+        tipoUsuarioService.deleteById(id);
+        Map<String, String>response=new HashMap<>();
+        response.put("response","deleted successfully");
+        return ResponseEntity.status(200).body(response);
     }
 
 }

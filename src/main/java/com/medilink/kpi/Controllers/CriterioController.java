@@ -43,4 +43,19 @@ public class CriterioController {
         return service.list();
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> edit(@PathVariable int id, @RequestBody CriterioDTO criterio){
+        Criterio newCriterio=service.findById(id);
+        if(criterio.nombreCriterio().isEmpty()){
+            return ResponseEntity.status(400).body("Missing or invalid criteria");
+        }
+
+        newCriterio.setNombreCriterio(criterio.nombreCriterio());
+        newCriterio.setValor(criterio.valor());
+
+        Area area=areaService.findById(criterio.area());
+        newCriterio.setArea(area);
+        service.save(newCriterio);
+        return ResponseEntity.status(201).body(criterio);
+    }
 }

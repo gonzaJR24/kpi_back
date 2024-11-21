@@ -37,7 +37,7 @@ public class EmpleadoService {
         if(this.findById(id)!=null){
             repository.deleteById(id);
         }else{
-            throw new EntityNotFoundException("ELement not found");
+            throw new EntityNotFoundException("Element not found");
         }
     }
 

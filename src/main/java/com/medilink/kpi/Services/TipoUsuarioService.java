@@ -24,4 +24,8 @@ public class TipoUsuarioService {
     public TipoUsuario findById(int id){
         return repository.findById(id).orElse(null);
     }
+
+    public void deleteById(int id){
+        repository.deleteById(id);
+    }
 }

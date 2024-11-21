@@ -22,8 +22,8 @@ public class PuntajeService {
         return repository.findAll();
     }
 
-    public Optional<Puntaje> findById(int id){
-        return repository.findById(id);
+    public Puntaje findById(int id){
+        return repository.findById(id).orElse(null);
     }
 
     public void deleteAll(){

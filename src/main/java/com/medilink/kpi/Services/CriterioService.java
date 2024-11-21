@@ -27,12 +27,12 @@ public class CriterioService {
         repository.deleteAll();
     }
 
-    public Optional<Criterio> findById(int id){
-        return repository.findById(id);
+    public Criterio findById(int id){
+        return repository.findById(id).orElse(null);
     }
 
     public void deleteById(int id){
-        if(this.findById(id).isPresent()){
+        if(this.findById(id)!=null){
             repository.deleteById(id);
         }else{
             throw new EntityNotFoundException("Element not found");
