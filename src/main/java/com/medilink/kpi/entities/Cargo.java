@@ -28,9 +28,5 @@ public class Cargo {
     @JsonIgnore
     private List<Empleado>empleados;
 
-    @ManyToOne
-    @JsonManagedReference
-    @JoinColumn(name = "presupuesto_id")
-    private Presupuesto presupuesto;
 
 }

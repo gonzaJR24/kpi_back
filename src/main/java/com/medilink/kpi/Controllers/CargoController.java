@@ -33,18 +33,6 @@ public class CargoController {
     }
     cargo.setNombreCargo(cargoDTO.nombreCargo());
 
-    // Asigna el último presupuesto existente
-    List<Presupuesto> presupuestos = presupuestoService.list();
-    if (!presupuestos.isEmpty()) {
-      Presupuesto ultimoPresupuesto = presupuestos.get(presupuestos.size() - 1);
-      cargo.setPresupuesto(ultimoPresupuesto);
-    } else {
-      // Crea un presupuesto vacío si no hay ninguno
-      Presupuesto nuevoPresupuesto = new Presupuesto();
-      nuevoPresupuesto.setMontoKpi(0);
-      presupuestoService.save(nuevoPresupuesto);
-      cargo.setPresupuesto(nuevoPresupuesto);
-    }
 
     cargoService.save(cargo);
     return ResponseEntity.status(201).body(cargo);
@@ -52,18 +40,6 @@ public class CargoController {
 
   @GetMapping
     public List<Cargo> list() {
-        setPresupuesto();
         return cargoService.list();
-    }
-//    @DeleteMapping
-//    public void delete() {
-//        cargoService.deleteAll();
-//    }
-    public void setPresupuesto() {
-        List<Presupuesto> presupuestos = presupuestoService.list();
-        for (Cargo cargo : cargoService.list()) {
-            Presupuesto ultimo_presupuesto = presupuestos.get(presupuestos.size() - 1);
-            cargo.setPresupuesto(ultimo_presupuesto);
-        }
     }
 }

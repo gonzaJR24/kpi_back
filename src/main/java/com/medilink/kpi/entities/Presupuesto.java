@@ -32,7 +32,4 @@ public class Presupuesto {
     @Column(name = "fecha(yyyy-mm-dd)")
     LocalDate date=LocalDate.now();
 
-    @JsonBackReference
-    @OneToMany(mappedBy = "presupuesto", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Cargo>cargos;
 }

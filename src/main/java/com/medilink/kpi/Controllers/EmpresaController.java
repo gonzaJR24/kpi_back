@@ -1,7 +1,9 @@
 package com.medilink.kpi.Controllers;
 
+import com.medilink.kpi.Services.EmpleadoService;
 import com.medilink.kpi.Services.EmpresaService;
 import com.medilink.kpi.Services.PresupuestoService;
+import com.medilink.kpi.entities.Empleado;
 import com.medilink.kpi.entities.Empresa;
 import com.medilink.kpi.entities.Presupuesto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,9 @@ import java.util.List;
 @RequestMapping("/api/empresa")
 public class EmpresaController {
 
+  @Autowired
+  private EmpleadoService empleadoService;
+
     @Autowired
     private EmpresaService empresaService;
 
@@ -30,12 +35,18 @@ public class EmpresaController {
         }
 
         empresaService.save(empresa);
+        List<Presupuesto> presupuestos = presupuestoService.list();
+        Presupuesto ultimo_presupuesto = presupuestos.get(presupuestos.size()-1);
+        empleadoService.actualizarPorcentaje(ultimo_presupuesto);
+
         cargarPresupuesto(empresa);
+
         return ResponseEntity.status(201).body("created successfully");
     }
 
     @GetMapping
     public List<Empresa>list(){
+
         return empresaService.list();
     }
 

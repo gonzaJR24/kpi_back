@@ -2,6 +2,7 @@ package com.medilink.kpi.Services;
 
 import com.medilink.kpi.entities.Area;
 import com.medilink.kpi.entities.Empleado;
+import com.medilink.kpi.entities.Presupuesto;
 import com.medilink.kpi.repositories.EmpleadoRepository;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -26,9 +27,77 @@ public class EmpleadoService {
         return repository.findAll();
     }
 
+    public void deleteById(int id){
+      repository.deleteById(id);
+    }
+
     public Empleado findById(int id){
         return repository.findById(id).orElse(null);
     }
+
+  // Actualizar porcentaje
+  public void actualizarPorcentaje(Presupuesto ultimo_presupuesto) {
+    // Inicializar contadores
+    int numeroOperativosA = 0;
+    int numeroOperativosB = 0;
+    int numeroOperativosC = 0;
+    int numeroOperativosD = 0;
+
+    // Contar empleados
+    for (Empleado empleado : repository.findAll()) {
+      switch (empleado.getCargo().getNombreCargo()) {
+        case "Operativo A":
+          numeroOperativosA++;
+          break;
+        case "Operativo B":
+          numeroOperativosB++;
+          break;
+        case "Operativo C":
+          numeroOperativosC++;
+          break;
+        case "Operativo D":
+          numeroOperativosD++;
+          break;
+      }
+    }
+
+    // Calcular el porcentaje
+    double base = ultimo_presupuesto.getMontoKpi() / (numeroOperativosD + (numeroOperativosC * 2) + (numeroOperativosB * 3) + (numeroOperativosA * 4));
+    List<Empleado> totalEmpleados = list();
+    for (Empleado empleado : totalEmpleados) {
+      switch (empleado.getCargo().getNombreCargo()) {
+        case "Operativo A":
+          double base_porcentual1 = (base * 100) / ultimo_presupuesto.getMontoKpi();
+          double porcentaje1 = base_porcentual1 * numeroOperativosA * 4;
+          empleado.setPorcentaje(porcentaje1);
+          empleado.setMonto((ultimo_presupuesto.getMontoKpi() * (porcentaje1 / 100)) / numeroOperativosA);
+          save(empleado);
+          break;
+        case "Operativo B":
+          double base_porcentual2 = (base * 100) / ultimo_presupuesto.getMontoKpi();
+          double porcentaje2 = base_porcentual2 * numeroOperativosB * 3;
+          empleado.setPorcentaje(porcentaje2);
+          empleado.setMonto((ultimo_presupuesto.getMontoKpi() * (porcentaje2 / 100)) / numeroOperativosB);
+          save(empleado);
+          break;
+        case "Operativo C":
+          double base_porcentual3 = (base * 100) / ultimo_presupuesto.getMontoKpi();
+          double porcentaje3 = base_porcentual3 * numeroOperativosC * 2;
+          empleado.setPorcentaje(porcentaje3);
+          empleado.setMonto((ultimo_presupuesto.getMontoKpi() * (porcentaje3 / 100)) / numeroOperativosC);
+          save(empleado);
+          break;
+        case "Operativo D":
+          double base_porcentual4 = (base * 100) / ultimo_presupuesto.getMontoKpi();
+          double porcentaje4 = base_porcentual4 * numeroOperativosD;
+          empleado.setPorcentaje(porcentaje4);
+          empleado.setMonto((ultimo_presupuesto.getMontoKpi() * (porcentaje4 / 100)) / numeroOperativosD);
+          save(empleado);
+          break;
+      }
+
+    }
+  }
 
 }
 
