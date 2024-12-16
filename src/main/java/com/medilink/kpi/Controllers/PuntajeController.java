@@ -2,6 +2,7 @@ package com.medilink.kpi.Controllers;
 
 import com.medilink.kpi.Services.EmpleadoService;
 import com.medilink.kpi.Services.PuntajeService;
+import com.medilink.kpi.entities.Empleado;
 import com.medilink.kpi.entities.Puntaje;
 import com.medilink.kpi.entities.dto.PuntajeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class PuntajeController {
         if(puntajeDTO==null){
             return ResponseEntity.status(400).body("Invalid or empty value");
         }
+        Empleado empleado=empleadoService.findById(puntajeDTO.empleado());
         Puntaje puntaje=new Puntaje();
         puntaje.setAusenciaPuntualidad(puntajeDTO.ausenciaPuntualidad());
         puntaje.setEspecifico1(puntajeDTO.especifico1());
@@ -37,9 +39,12 @@ public class PuntajeController {
         int sumaPuntajes=puntajeDTO.ausenciaPuntualidad()+puntajeDTO.especifico1()+puntajeDTO.especifico2()+puntajeDTO.nps()+
                 puntajeDTO.actitudesGestionComportamiento()+puntajeDTO.calificacionLider();
 
+      if (puntajeDTO.especifico1()<3 && puntajeDTO.especifico2() < 3) {
+        empleado.setMonto(0);
+      }
         puntaje.setPuntajeTotal(sumaPuntajes);
         puntaje.setComentario(puntajeDTO.comentario());
-        puntaje.setEmpleado(empleadoService.findById(puntajeDTO.empleado()));
+        puntaje.setEmpleado(empleado);
         puntaje.setFechaEvaluacion(LocalDate.now());
 
         puntajeService.save(puntaje);
