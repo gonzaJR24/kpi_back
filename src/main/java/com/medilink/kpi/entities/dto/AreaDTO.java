@@ -1,4 +1,4 @@
 package com.medilink.kpi.entities.dto;
 
-public record AreaDTO(String nombreArea, int sucursal) {
+public record AreaDTO(String nombreArea, int sucursal, String gerente) {
 }

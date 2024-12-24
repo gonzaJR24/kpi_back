@@ -1,5 +1,6 @@
 package com.medilink.kpi.Controllers;
 
+import com.medilink.kpi.Services.EmpleadoService;
 import com.medilink.kpi.Services.EmpresaService;
 import com.medilink.kpi.Services.PresupuestoService;
 import com.medilink.kpi.entities.Empresa;
@@ -22,6 +23,11 @@ public class EmpresaController {
 
     @Autowired
     private PresupuestoService presupuestoService;
+
+    @Autowired
+    private EmpleadoService empleadoService;
+
+
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody Empresa empresa) {
@@ -56,6 +62,10 @@ public class EmpresaController {
 
         empresaService.edit(empresa);
         cargarPresupuesto(empresa);
+
+        List<Presupuesto> presupuestos = presupuestoService.list();
+        Presupuesto ultimo_presupuesto = presupuestos.get(presupuestos.size() - 1);
+        empleadoService.actualizarPorcentaje(ultimo_presupuesto, empleadoService.list());
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(empresa);
     }
 
@@ -88,4 +98,3 @@ public class EmpresaController {
     }
 
 }
-

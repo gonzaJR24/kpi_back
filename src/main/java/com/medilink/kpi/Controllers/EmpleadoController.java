@@ -1,7 +1,6 @@
 package com.medilink.kpi.Controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.medilink.kpi.Services.*;
 import com.medilink.kpi.entities.Empleado;
 import com.medilink.kpi.entities.Presupuesto;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/empleado")
 public class EmpleadoController {
 
@@ -28,14 +28,12 @@ public class EmpleadoController {
     @Autowired
     private AreaService areaService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @PostMapping
     public ResponseEntity<Object> save(@RequestBody EmpleadoDTO empleadoDTO) {
         if (empleadoDTO.nombre().isEmpty() || empleadoDTO.apellido().isEmpty() || empleadoDTO.cargo() == 0) {
             return ResponseEntity.status(400).body("cannot be empty");
         }
+
 
         Empleado empleado = new Empleado();
         empleado.setNombre(empleadoDTO.nombre());
@@ -44,12 +42,9 @@ public class EmpleadoController {
         empleado.setArea(areaService.findById(empleadoDTO.area()));
         empleadoService.save(empleado);
 
-        // Obtener la lista actualizada de empleados y recalcular
         List<Presupuesto> presupuestos = presupuestoService.list();
         Presupuesto ultimo_presupuesto = presupuestos.get(presupuestos.size() - 1);
-
-        // Volver a calcular porcentajes y montos después de asegurarse de que el nuevo empleado está en la lista
-        actualizarPorcentaje(ultimo_presupuesto);
+        actualizarPorcentaje(ultimo_presupuesto, empleadoService.list());
 
         return ResponseEntity.status(201).body(empleado);
     }
@@ -61,7 +56,7 @@ public class EmpleadoController {
     }
 
     // Actualizar porcentaje
-    public void actualizarPorcentaje(Presupuesto ultimo_presupuesto) {
+    public void actualizarPorcentaje(Presupuesto ultimo_presupuesto, List<Empleado> empleados) {
         // Inicializar contadores
         int numeroOperativosA = 0;
         int numeroOperativosB = 0;
@@ -69,7 +64,7 @@ public class EmpleadoController {
         int numeroOperativosD = 0;
 
         // Contar empleados
-        for (Empleado empleado : empleadoService.list()) {
+        for (Empleado empleado : empleados) {
             switch (empleado.getCargo().getNombreCargo()) {
                 case "Operativo A":
                     numeroOperativosA++;
@@ -120,7 +115,7 @@ public class EmpleadoController {
                     empleadoService.save(empleado);
                     break;
             }
-            empleado.getCargo().getPresupuesto().setMontoKpi(ultimo_presupuesto.getMontoKpi());
+//            empleado.getCargo().getPresupuesto().setMontoKpi(ultimo_presupuesto.getMontoKpi());
             empleadoService.save(empleado);
         }
     }

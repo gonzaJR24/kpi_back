@@ -38,6 +38,4 @@ public class Usuario {
     @ManyToOne
     @JoinColumn(name = "id_sucursal",  nullable = false)
     private Sucursal sucursal;
-
-
 }

@@ -16,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/area")
+@CrossOrigin
 public class AreaController {
 
     @Autowired
@@ -39,6 +40,7 @@ public class AreaController {
         Area area = new Area();
         area.setNombreArea(areaDTO.nombreArea());
         area.setSucursal(sucursalService.findById(areaDTO.sucursal()));
+        area.setGerente(areaDTO.gerente());
 
         totalEmpleados();
         areaService.save(area);
@@ -49,6 +51,19 @@ public class AreaController {
     public List<Area> list() {
         totalEmpleados();
         return areaService.list();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> edit(@PathVariable int id, @RequestBody AreaDTO areaDTO){
+        Area area=areaService.findById(id);
+        if(area==null){
+            return ResponseEntity.status(404).body("Area not found");
+        }
+        area.setNombreArea(areaDTO.nombreArea());
+        area.setSucursal(sucursalService.findById(areaDTO.sucursal()));
+        area.setGerente(areaDTO.gerente());
+        areaService.save(area);
+        return ResponseEntity.status(201).body(areaDTO);
     }
 
     public void totalEmpleados() {

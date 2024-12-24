@@ -37,6 +37,8 @@ public class Area {
     @JoinColumn(name = "id_sucursal", nullable = false)
     private Sucursal sucursal;
 
+    private String gerente;
+
 //    @Column(name = "rendimiento_area")
 //    private double rendimientoArea;
 }
