@@ -20,4 +20,8 @@ public class PuntajeService {
     public List<Puntaje> list(){
         return repository.findAll();
     }
+
+    public Puntaje findById(int id){
+        return repository.findById(id).orElse(null);
+    }
 }

@@ -48,5 +48,8 @@ public class Empleado {
     @JsonBackReference
     private List<Puntaje> puntajes;
 
+    @Column
+    private double rendimiento;
+
 }
 

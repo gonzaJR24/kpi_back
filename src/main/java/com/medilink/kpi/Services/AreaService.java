@@ -26,4 +26,8 @@ public class AreaService {
     public Area findById(int id){
         return repository.findById(id).orElse(null);
     }
+
+    public void deleteById(int id){
+        repository.deleteById(id);
+    }
 }

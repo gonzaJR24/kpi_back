@@ -19,6 +19,7 @@ public class EmpleadoService {
     @Autowired
     private EmpleadoRepository repository;
 
+
     public void save(Empleado empleado) {
         repository.save(empleado);
     }
@@ -29,6 +30,14 @@ public class EmpleadoService {
 
     public Empleado findById(int id){
         return repository.findById(id).orElse(null);
+    }
+
+    public void deleteById(int id){
+        repository.deleteById(id);
+    }
+
+    public List<Empleado> findByArea(Area area){
+        return repository.findByArea(area);
     }
 
     // Actualizar porcentaje
@@ -94,8 +103,7 @@ public class EmpleadoService {
                     repository.save(empleado);
                     break;
             }
-//            empleado.getCargo().getPresupuesto().setMontoKpi(ultimo_presupuesto.getMontoKpi());
-//            repository.save(empleado);
+
         }
     }
 

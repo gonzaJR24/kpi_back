@@ -39,6 +39,6 @@ public class Area {
 
     private String gerente;
 
-//    @Column(name = "rendimiento_area")
-//    private double rendimientoArea;
+    @Column(name = "rendimiento_area")
+    private double rendimientoArea;
 }

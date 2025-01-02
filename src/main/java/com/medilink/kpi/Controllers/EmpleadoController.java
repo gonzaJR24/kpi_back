@@ -2,8 +2,11 @@ package com.medilink.kpi.Controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.medilink.kpi.Services.*;
+import com.medilink.kpi.entities.Area;
 import com.medilink.kpi.entities.Empleado;
 import com.medilink.kpi.entities.Presupuesto;
+import com.medilink.kpi.entities.Puntaje;
+import com.medilink.kpi.entities.dto.AreaDTO;
 import com.medilink.kpi.entities.dto.EmpleadoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +30,9 @@ public class EmpleadoController {
 
     @Autowired
     private AreaService areaService;
+
+    @Autowired
+    private PuntajeService puntajeService;
 
     @PostMapping
     public ResponseEntity<Object> save(@RequestBody EmpleadoDTO empleadoDTO) {
@@ -52,7 +58,46 @@ public class EmpleadoController {
 
     @GetMapping
     public List<Empleado> list() throws JsonProcessingException {
+        List<Puntaje>listaPuntaje=puntajeService.list();
+        for(Puntaje puntaje:listaPuntaje){
+            Empleado empleado=empleadoService.findById(puntaje.getEmpleado().getId());
+            if(empleado!=null){
+                empleado.setRendimiento((double) (puntaje.getPuntajeTotal() * 100) /70);
+                empleadoService.save(empleado);
+            }else{
+                empleado.setRendimiento(0);
+                empleadoService.save(empleado);
+            }
+        }
         return empleadoService.list();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Empleado> findById(@PathVariable int id){
+        Empleado empleado=empleadoService.findById(id);
+        return ResponseEntity.status(200).body(empleado);
+    }
+
+    @GetMapping("/area/{area}")
+    public List<Empleado> findByArea(@PathVariable int area) {
+        Area area1 = areaService.findById(area);
+        return empleadoService.findByArea(area1);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Empleado> findById(@PathVariable int id, @RequestBody EmpleadoDTO empleadoDTO){
+        Empleado empleado=empleadoService.findById(id);
+        empleado.setNombre(empleadoDTO.nombre());
+        empleado.setApellido(empleadoDTO.apellido());
+        empleado.setArea(areaService.findById(empleadoDTO.area()));
+        empleado.setCargo(cargoService.findById(empleadoDTO.cargo()));
+        empleadoService.save(empleado);
+        return ResponseEntity.status(200).body(empleado);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable int id){
+        empleadoService.deleteById(id);
     }
 
     // Actualizar porcentaje
@@ -89,34 +134,41 @@ public class EmpleadoController {
                 case "Operativo A":
                     double base_porcentual1 = (base * 100) / ultimo_presupuesto.getMontoKpi();
                     double porcentaje1 = base_porcentual1 * numeroOperativosA * 4;
-                    empleado.setPorcentaje(porcentaje1);
+                    empleado.setPorcentaje(porcentaje1/numeroOperativosA);
                     empleado.setMonto((ultimo_presupuesto.getMontoKpi() * (porcentaje1 / 100)) / numeroOperativosA);
                     empleadoService.save(empleado);
                     break;
                 case "Operativo B":
                     double base_porcentual2 = (base * 100) / ultimo_presupuesto.getMontoKpi();
                     double porcentaje2 = base_porcentual2 * numeroOperativosB * 3;
-                    empleado.setPorcentaje(porcentaje2);
+                    empleado.setPorcentaje(porcentaje2/numeroOperativosB);
                     empleado.setMonto((ultimo_presupuesto.getMontoKpi() * (porcentaje2 / 100)) / numeroOperativosB);
                     empleadoService.save(empleado);
                     break;
                 case "Operativo C":
                     double base_porcentual3 = (base * 100) / ultimo_presupuesto.getMontoKpi();
                     double porcentaje3 = base_porcentual3 * numeroOperativosC * 2;
-                    empleado.setPorcentaje(porcentaje3);
+                    empleado.setPorcentaje(porcentaje3/numeroOperativosC);
                     empleado.setMonto((ultimo_presupuesto.getMontoKpi() * (porcentaje3 / 100)) / numeroOperativosC);
                     empleadoService.save(empleado);
                     break;
                 case "Operativo D":
                     double base_porcentual4 = (base * 100) / ultimo_presupuesto.getMontoKpi();
                     double porcentaje4 = base_porcentual4 * numeroOperativosD;
-                    empleado.setPorcentaje(porcentaje4);
+                    empleado.setPorcentaje(porcentaje4/numeroOperativosD);
                     empleado.setMonto((ultimo_presupuesto.getMontoKpi() * (porcentaje4 / 100)) / numeroOperativosD);
                     empleadoService.save(empleado);
                     break;
             }
 //            empleado.getCargo().getPresupuesto().setMontoKpi(ultimo_presupuesto.getMontoKpi());
-            empleadoService.save(empleado);
+//            List<Puntaje>listaPuntaje=puntajeService.list();
+//            for(Puntaje puntaje:listaPuntaje){
+//                if(puntaje.getEmpleado().getId().equals(empleado.getId())){
+//                    empleado.setRendimiento((double) (puntaje.getPuntajeTotal() * 100) /70);
+//                }else{
+//                    empleado.setRendimiento(0);
+//                }
+//            }
         }
     }
 }

@@ -1,6 +1,6 @@
+
 package com.medilink.kpi.Controllers;
 
-import com.medilink.kpi.Services.EmpleadoService;
 import com.medilink.kpi.Services.EmpresaService;
 import com.medilink.kpi.Services.PresupuestoService;
 import com.medilink.kpi.entities.Empresa;
@@ -10,12 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/empresa")
+@CrossOrigin
 public class EmpresaController {
 
     @Autowired
@@ -23,11 +23,6 @@ public class EmpresaController {
 
     @Autowired
     private PresupuestoService presupuestoService;
-
-    @Autowired
-    private EmpleadoService empleadoService;
-
-
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody Empresa empresa) {
@@ -45,11 +40,6 @@ public class EmpresaController {
         return empresaService.list();
     }
 
-    @DeleteMapping
-    public void delete(){
-        empresaService.delete();
-    }
-
     @PutMapping
     public ResponseEntity<Object> edit(@RequestBody Empresa empresa){
         if(empresa==null){
@@ -62,15 +52,10 @@ public class EmpresaController {
 
         empresaService.edit(empresa);
         cargarPresupuesto(empresa);
-
-        List<Presupuesto> presupuestos = presupuestoService.list();
-        Presupuesto ultimo_presupuesto = presupuestos.get(presupuestos.size() - 1);
-        empleadoService.actualizarPorcentaje(ultimo_presupuesto, empleadoService.list());
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(empresa);
     }
 
 
-    //Cargar presupuesto
     public void cargarPresupuesto(Empresa empresa) {
         double porcientoKpi2 = (empresa.getProgresoEmpresa() * 100.0) / empresa.getValorMeta();
         DecimalFormat decimalFormat=new DecimalFormat("#.#");
@@ -79,10 +64,10 @@ public class EmpresaController {
         // Crear Presupuesto
         Presupuesto presupuesto = new Presupuesto();
 
-        if (porcientoKpi < 70) {
+        if (porcientoKpi <= 70) {
             presupuesto.setMontoKpi(0);
             presupuestoService.save(presupuesto);
-        } else if (porcientoKpi >= 70 && porcientoKpi < 89.4) {//funciona
+        } else if (porcientoKpi >= 70.5 && porcientoKpi < 89.4) {
             presupuesto.setMontoKpi(empresa.getProgresoEmpresa() * 0.0125);
             presupuestoService.save(presupuesto);
         } else if (porcientoKpi > 89.5 && porcientoKpi < 99.5) {

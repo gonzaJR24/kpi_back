@@ -40,10 +40,7 @@ public class CargoController {
         setPresupuesto();
         return cargoService.list();
     }
-//    @DeleteMapping
-//    public void delete() {
-//        cargoService.deleteAll();
-//    }
+
     public void setPresupuesto() {
         List<Presupuesto> presupuestos = presupuestoService.list();
         for (Cargo cargo : cargoService.list()) {

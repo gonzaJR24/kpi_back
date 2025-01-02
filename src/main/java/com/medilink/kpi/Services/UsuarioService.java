@@ -25,10 +25,6 @@ public class UsuarioService {
         return repository.findById(id).orElse(null);
     }
 
-    public void deleteAll(){
-        repository.deleteAll();
-    }
-
     public void deleteById(int id) {
         Usuario usuario = findById(id);
         if (usuario != null) {

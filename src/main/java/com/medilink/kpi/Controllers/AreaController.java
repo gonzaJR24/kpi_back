@@ -12,12 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.text.DecimalFormat;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/area")
 @CrossOrigin
 public class AreaController {
+
+    private static final int NUMERO_DE_CRITERIOS = 6;
+    private final List<String> NOMBRE_AREAS = Arrays.asList("Productividad", "Servicios Generales", "Direccion Medica", "Facturacion", "Operaciones", "Contabilidad");
 
     @Autowired
     private AreaService areaService;
@@ -34,74 +38,63 @@ public class AreaController {
     @PostMapping
     public ResponseEntity<?> save(@RequestBody AreaDTO areaDTO) {
         if (areaDTO.nombreArea().isEmpty() || areaDTO.sucursal() == 0) {
-            return ResponseEntity.status(400).body("invalid or empty values");
+            return ResponseEntity.status(400).body("Invalid or empty values");
         }
 
         Area area = new Area();
         area.setNombreArea(areaDTO.nombreArea());
         area.setSucursal(sucursalService.findById(areaDTO.sucursal()));
-        area.setGerente(areaDTO.gerente());
 
-        totalEmpleados();
-        areaService.save(area);
-        return ResponseEntity.status(201).body(area);
-    }
-
-    @GetMapping
-    public List<Area> list() {
-        totalEmpleados();
-        return areaService.list();
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<?> edit(@PathVariable int id, @RequestBody AreaDTO areaDTO){
-        Area area=areaService.findById(id);
-        if(area==null){
-            return ResponseEntity.status(404).body("Area not found");
-        }
-        area.setNombreArea(areaDTO.nombreArea());
-        area.setSucursal(sucursalService.findById(areaDTO.sucursal()));
-        area.setGerente(areaDTO.gerente());
+        actualizarRendimiento();
         areaService.save(area);
         return ResponseEntity.status(201).body(areaDTO);
     }
 
-    public void totalEmpleados() {
-        int cantidadEmpleados = 0;
-        List<Empleado> listaEmpleados = empleadoService.list();
+    @GetMapping
+    public List<Area> list() {
+        actualizarRendimiento();
+        return areaService.list();
+    }
 
-        for (Empleado empleado : listaEmpleados) {
-            List<Area> areas = areaService.list();
-            for (Area area : areas) {
-                if (empleado.getArea() != null) {
-                    if (empleado.getArea().getNombreArea().equals(area.getNombreArea())) {
-                        area.setCantidadEmpleados(++cantidadEmpleados);
+    private void actualizarRendimiento() {
+        List<Empleado> listaEmpleados = empleadoService.list();
+        List<Area> areas = areaService.list();
+        Map<String, Integer> cantidad_empleados_areas = new HashMap<>();
+
+        for (String areaName : NOMBRE_AREAS) {
+            cantidad_empleados_areas.put(areaName, 0);
+        }
+
+        for (Area area : areas) {
+            int puntajeArea = 0;
+            int numero_empleados = 0;
+
+            for (Empleado empleado : listaEmpleados) {
+                if (empleado.getArea() != null && empleado.getArea().getNombreArea().equals(area.getNombreArea())) {
+                    numero_empleados++;
+                    for (Puntaje puntaje : empleado.getPuntajes()) {
+                        puntajeArea += puntaje.getPuntajeTotal();
                     }
                 }
+            }
+
+            if (numero_empleados > 0) {
+                area.setPuntajeTotal(cantidad_empleados_areas.get(area.getNombreArea()));
+                area.setPuntajeTotal(puntajeArea);
+                calcularEstablecerRendimiento(puntajeArea, numero_empleados, area);
+            } else {
+                area.setPuntajeTotal(0);
+                area.setCantidadEmpleados(0);
             }
         }
     }
 
-//    public void rendimientoEmpleado() {
-//        double puntajes = 0;
-//        int cantidadEmpleados = 0;
-//        List<Empleado> listaEmpleados = empleadoService.list();
-//
-//        for (Empleado empleado : listaEmpleados) {
-//            List<Area> areas = areaService.list();
-//            for (Area area : areas) {
-//                area.setRendimientoArea(300);
-//                if (empleado.getArea().getNombreArea().equals(area.getNombreArea())) {
-//                    List<Puntaje> listaPuntajes = empleado.getPuntajes();
-//                    for (Puntaje puntaje : listaPuntajes) {
-//                        puntajes += puntaje.getPuntajeTotal();
-//                    }
-//                    if (puntajes != 0) {
-//                        area.setRendimientoArea(puntajes);
-//                    }
-//                }
-//            }
-//        }
-//
-//    }
+    private void calcularEstablecerRendimiento(double puntajeContabilidad, int cantidadEmpleados, Area area) {
+        DecimalFormat decimalFormat = new DecimalFormat("#.#");
+        double rendimiento = (puntajeContabilidad / cantidadEmpleados) / NUMERO_DE_CRITERIOS;
+        double rendimientoFormateado = Double.parseDouble(decimalFormat.format(rendimiento));
+        area.setRendimientoArea(rendimientoFormateado);
+        area.setCantidadEmpleados(cantidadEmpleados);
+        areaService.save(area);
+    }
 }
