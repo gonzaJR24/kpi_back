@@ -48,9 +48,7 @@ public class EmpleadoController {
         empleado.setArea(areaService.findById(empleadoDTO.area()));
         empleadoService.save(empleado);
 
-        List<Presupuesto> presupuestos = presupuestoService.list();
-        Presupuesto ultimo_presupuesto = presupuestos.get(presupuestos.size() - 1);
-        actualizarPorcentaje(ultimo_presupuesto, empleadoService.list());
+        updateDatosEmpleado();
 
         return ResponseEntity.status(201).body(empleado);
     }
@@ -69,6 +67,8 @@ public class EmpleadoController {
                 empleadoService.save(empleado);
             }
         }
+        //Actualizar datos empleado
+        updateDatosEmpleado();
         return empleadoService.list();
     }
 
@@ -92,12 +92,19 @@ public class EmpleadoController {
         empleado.setArea(areaService.findById(empleadoDTO.area()));
         empleado.setCargo(cargoService.findById(empleadoDTO.cargo()));
         empleadoService.save(empleado);
+        updateDatosEmpleado();
         return ResponseEntity.status(200).body(empleado);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable int id){
         empleadoService.deleteById(id);
+    }
+
+    public void updateDatosEmpleado(){
+        List<Presupuesto> presupuestos = presupuestoService.list();
+        Presupuesto ultimo_presupuesto = presupuestos.get(presupuestos.size() - 1);
+        actualizarPorcentaje(ultimo_presupuesto, empleadoService.list());
     }
 
     // Actualizar porcentaje
@@ -160,6 +167,8 @@ public class EmpleadoController {
                     empleadoService.save(empleado);
                     break;
             }
+
+
 //            empleado.getCargo().getPresupuesto().setMontoKpi(ultimo_presupuesto.getMontoKpi());
 //            List<Puntaje>listaPuntaje=puntajeService.list();
 //            for(Puntaje puntaje:listaPuntaje){
@@ -170,6 +179,8 @@ public class EmpleadoController {
 //                }
 //            }
         }
+
+
     }
 }
 

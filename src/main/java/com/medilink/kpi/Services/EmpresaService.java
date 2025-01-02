@@ -29,12 +29,4 @@ public class EmpresaService {
         repository.deleteAll();
     }
 
-    public void edit(Empresa empresa){
-        Empresa empresa1=this.findById(1);
-        empresa1.setNombreEmpresa(empresa.getNombreEmpresa());
-        empresa1.setProgresoEmpresa(empresa.getProgresoEmpresa());
-        empresa1.setValorMeta(empresa.getValorMeta());
-
-        repository.save(empresa1);
-    }
 }

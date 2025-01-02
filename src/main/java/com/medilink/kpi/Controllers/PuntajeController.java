@@ -44,6 +44,16 @@ public class PuntajeController {
         puntaje.setEmpleado(empleadoService.findById(puntajeDTO.empleado()));
         puntaje.setFechaEvaluacion(LocalDate.now());
 
+        if(puntajeDTO.especifico1()<2 || puntajeDTO.especifico2()<2){
+            puntaje.setAusenciaPuntualidad(0);
+            puntaje.setEspecifico1(0);
+            puntaje.setEspecifico2(0);
+            puntaje.setNps(0);
+            puntaje.setActitudesGestionComportamiento(0);
+            puntaje.setCalificacionLider(0);
+            puntaje.setPuntajeTotal(sumaPuntajes);
+        }
+
         puntajeService.save(puntaje);
         return ResponseEntity.status(201).body(puntajeDTO);
     }

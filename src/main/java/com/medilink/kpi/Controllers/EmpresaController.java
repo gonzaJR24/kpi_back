@@ -5,6 +5,7 @@ import com.medilink.kpi.Services.EmpresaService;
 import com.medilink.kpi.Services.PresupuestoService;
 import com.medilink.kpi.entities.Empresa;
 import com.medilink.kpi.entities.Presupuesto;
+import com.medilink.kpi.entities.dto.EmpresaDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,16 +25,18 @@ public class EmpresaController {
     @Autowired
     private PresupuestoService presupuestoService;
 
-    @PostMapping
-    public ResponseEntity<?> save(@RequestBody Empresa empresa) {
-        if (empresa.getNombreEmpresa().isEmpty() || empresa.getProgresoEmpresa() == 0 || empresa.getValorMeta() == 0) {
-            return ResponseEntity.status(400).body("invalid or empty values");
-        }
+//    Por el momento no es necesario agregar empresa
 
-        empresaService.save(empresa);
-        cargarPresupuesto(empresa);
-        return ResponseEntity.status(201).body("created successfully");
-    }
+//    @PostMapping
+//    public ResponseEntity<?> save(@RequestBody Empresa empresa) {
+//        if (empresa.getNombreEmpresa().isEmpty() || empresa.getProgresoEmpresa() == 0 || empresa.getValorMeta() == 0) {
+//            return ResponseEntity.status(400).body("invalid or empty values");
+//        }
+//
+//        empresaService.save(empresa);
+//        cargarPresupuesto(empresa);
+//        return ResponseEntity.status(201).body("created successfully");
+//    }
 
     @GetMapping
     public List<Empresa>list(){
@@ -41,16 +44,16 @@ public class EmpresaController {
     }
 
     @PutMapping
-    public ResponseEntity<Object> edit(@RequestBody Empresa empresa){
-        if(empresa==null){
+    public ResponseEntity<Object> edit(@RequestBody EmpresaDTO empresaDTO){
+        Empresa empresa=empresaService.findById(1); //Solo tengo una empresa, pondre el primer id
+        if(empresaDTO==null){
             return ResponseEntity.status(400).body("cannot be null");
         }
 
-        if(empresa.getProgresoEmpresa()==0 || empresa.getValorMeta()==0){
-            return ResponseEntity.status(404).body("Invalid or empty values");
-        }
 
-        empresaService.edit(empresa);
+        empresa.setProgresoEmpresa(empresaDTO.progresoEmpresa());
+        empresa.setValorMeta(empresaDTO.valorMeta());
+        empresaService.save(empresa);
         cargarPresupuesto(empresa);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(empresa);
     }
