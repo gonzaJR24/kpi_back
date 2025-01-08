@@ -1,5 +1,7 @@
 package com.medilink.kpi.Services;
 
+import com.medilink.kpi.entities.Area;
+import com.medilink.kpi.entities.Empleado;
 import com.medilink.kpi.entities.Usuario;
 import com.medilink.kpi.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,4 +33,11 @@ public class UsuarioService {
             repository.delete(usuario);
         }
     }
+
+
+
+    public Usuario findByNombreUsuario(String nombreUsuario){
+        return repository.findByNombreUsuario(nombreUsuario);
+    }
+
 }

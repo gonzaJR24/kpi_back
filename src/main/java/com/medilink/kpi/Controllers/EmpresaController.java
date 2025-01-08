@@ -25,18 +25,17 @@ public class EmpresaController {
     @Autowired
     private PresupuestoService presupuestoService;
 
-//    Por el momento no es necesario agregar empresa
 
-//    @PostMapping
-//    public ResponseEntity<?> save(@RequestBody Empresa empresa) {
-//        if (empresa.getNombreEmpresa().isEmpty() || empresa.getProgresoEmpresa() == 0 || empresa.getValorMeta() == 0) {
-//            return ResponseEntity.status(400).body("invalid or empty values");
-//        }
-//
-//        empresaService.save(empresa);
-//        cargarPresupuesto(empresa);
-//        return ResponseEntity.status(201).body("created successfully");
-//    }
+    @PostMapping
+    public ResponseEntity<?> save(@RequestBody Empresa empresa) {
+        if (empresa.getNombreEmpresa().isEmpty() || empresa.getProgresoEmpresa() == 0 || empresa.getValorMeta() == 0) {
+            return ResponseEntity.status(400).body("invalid or empty values");
+        }
+
+        empresaService.save(empresa);
+        cargarPresupuesto(empresa);
+        return ResponseEntity.status(201).body("created successfully");
+    }
 
     @GetMapping
     public List<Empresa>list(){
@@ -45,7 +44,7 @@ public class EmpresaController {
 
     @PutMapping
     public ResponseEntity<Object> edit(@RequestBody EmpresaDTO empresaDTO){
-        Empresa empresa=empresaService.findById(1); //Solo tengo una empresa, pondre el primer id
+        Empresa empresa=empresaService.findById(1);
         if(empresaDTO==null){
             return ResponseEntity.status(400).body("cannot be null");
         }
@@ -67,20 +66,14 @@ public class EmpresaController {
         // Crear Presupuesto
         Presupuesto presupuesto = new Presupuesto();
 
-        if (porcientoKpi <= 70) {
+        if (porcientoKpi < 90 ) {
             presupuesto.setMontoKpi(0);
             presupuestoService.save(presupuesto);
-        } else if (porcientoKpi >= 70.5 && porcientoKpi < 89.4) {
-            presupuesto.setMontoKpi(empresa.getProgresoEmpresa() * 0.0125);
+        } else if (porcientoKpi >= 90 && porcientoKpi < 101) {
+            presupuesto.setMontoKpi(empresa.getProgresoEmpresa() * 0.01);
             presupuestoService.save(presupuesto);
-        } else if (porcientoKpi > 89.5 && porcientoKpi < 99.5) {
-            presupuesto.setMontoKpi(empresa.getProgresoEmpresa() * 0.0150);
-            presupuestoService.save(presupuesto);
-        } else if (porcientoKpi >= 99.5  && porcientoKpi<100.5) {
-            presupuesto.setMontoKpi(empresa.getProgresoEmpresa() * 0.0175);
-            presupuestoService.save(presupuesto);
-        } else if (porcientoKpi >= 100.5) {
-            presupuesto.setMontoKpi(empresa.getProgresoEmpresa() * 0.03);
+        } else if (porcientoKpi > 101) {
+            presupuesto.setMontoKpi(empresa.getProgresoEmpresa() * 0.02);
             presupuestoService.save(presupuesto);
         }
     }

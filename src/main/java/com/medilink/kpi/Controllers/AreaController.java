@@ -44,6 +44,7 @@ public class AreaController {
         Area area = new Area();
         area.setNombreArea(areaDTO.nombreArea());
         area.setSucursal(sucursalService.findById(areaDTO.sucursal()));
+        area.setGerente(areaDTO.gerente());
 
         actualizarRendimiento();
         areaService.save(area);
@@ -54,6 +55,21 @@ public class AreaController {
     public List<Area> list() {
         actualizarRendimiento();
         return areaService.list();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> edit(@PathVariable int id, @RequestBody AreaDTO areaDTO){
+        Area area=areaService.findById(id);
+        area.setNombreArea(areaDTO.nombreArea());
+        area.setGerente(areaDTO.gerente());
+        area.setSucursal(sucursalService.findById(areaDTO.sucursal()));
+        areaService.save(area);
+        return ResponseEntity.status(200).body(area);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable int id){
+        areaService.deleteById(id);
     }
 
     private void actualizarRendimiento() {
@@ -92,9 +108,12 @@ public class AreaController {
     private void calcularEstablecerRendimiento(double puntajeContabilidad, int cantidadEmpleados, Area area) {
         DecimalFormat decimalFormat = new DecimalFormat("#.#");
         double rendimiento = (puntajeContabilidad / cantidadEmpleados) / NUMERO_DE_CRITERIOS;
-        double rendimientoFormateado = Double.parseDouble(decimalFormat.format(rendimiento));
+
+        // Reemplazo de coma por punto para evitar errores de formato
+        double rendimientoFormateado = Double.parseDouble(decimalFormat.format(rendimiento).replace(",", "."));
         area.setRendimientoArea(rendimientoFormateado);
         area.setCantidadEmpleados(cantidadEmpleados);
         areaService.save(area);
     }
+
 }

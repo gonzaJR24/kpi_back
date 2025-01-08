@@ -40,6 +40,7 @@ public class EmpleadoService {
         return repository.findByArea(area);
     }
 
+
     // Actualizar porcentaje
     public void actualizarPorcentaje(Presupuesto ultimo_presupuesto, List<Empleado> empleados) {
         // Inicializar contadores
