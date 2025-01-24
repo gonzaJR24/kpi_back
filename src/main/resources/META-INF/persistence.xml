@@ -1,0 +1,22 @@
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+                                 http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+             version="2.1">
+
+  <persistence-unit name="miUnidadDePersistencia">
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    <class>com.tu.paquete.TuEntidad</class> <!-- Reemplaza con tus clases de entidad -->
+
+    <properties>
+      <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@localhost:1521:xe"/> <!-- Reemplaza con tu URL de DB -->
+      <property name="javax.persistence.jdbc.user" value="USER_JUNIOR"/> <!-- Reemplaza con tu usuario -->
+      <property name="javax.persistence.jdbc.password" value="oracle"/> <!-- Reemplaza con tu contraseña -->
+      <property name="hibernate.dialect" value="org.hibernate.dialect.OracleDialect"/>
+      <property name="hibernate.hbm2ddl.auto" value="create"/> <!-- O "create" si es necesario -->
+      <property name="hibernate.show_sql" value="true"/>
+      <property name="hibernate.jdbc.batch_size" value="50"/> <!-- Configuración de lotes -->
+    </properties>
+  </persistence-unit>
+</persistence>
