@@ -1,5 +1,6 @@
 package com.medilink.kpi.Controllers;
 
+import com.medilink.kpi.Services.AreaService;
 import com.medilink.kpi.Services.SucursalService;
 import com.medilink.kpi.Services.TipoUsuarioService;
 import com.medilink.kpi.Services.UsuarioService;
@@ -7,13 +8,11 @@ import com.medilink.kpi.entities.Usuario;
 import com.medilink.kpi.entities.dto.UsuarioDTO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -39,6 +38,9 @@ public class UsuarioController {
     @Autowired
     private TipoUsuarioService tipoUsuarioService;
 
+    @Autowired
+    private AreaService areaService;
+
     @GetMapping
     public List<Usuario> listar(){
         return usuarioService.list();
@@ -54,6 +56,7 @@ public class UsuarioController {
       usuario.setNombreUsuario(usuarioDTO.nombreUsuario());
       usuario.setContrasena(usuarioDTO.contrasena());
       usuario.setFechaCreacion(LocalDate.now());
+      usuario.setArea(areaService.findById(usuarioDTO.area()).getNombreArea());
       usuarioService.save(usuario);
       return ResponseEntity.status(201).body(usuarioDTO);
     }
@@ -84,13 +87,13 @@ public class UsuarioController {
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
             session.setAttribute("user", authentication.getPrincipal());
             Map<String, Object> response = new HashMap<>();
-            response.put("username", loginRequest.getUsername());
+            response.put("username", usuarioService.findByNombreUsuario(loginRequest.getUsername()));
             response.put("authenticated", true);
             return ResponseEntity.status(200).body(response);
         } catch (AuthenticationException e) {
             return ResponseEntity.status(400).body("Login failed: " + e.getMessage());
         }
-        }
+    }
 
     @PostMapping("/logout")
     public String logout(HttpSession session) {

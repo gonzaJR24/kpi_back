@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -39,7 +40,6 @@ public class EmpleadoController {
         if (empleadoDTO.nombre().isEmpty() || empleadoDTO.apellido().isEmpty() || empleadoDTO.cargo() == 0) {
             return ResponseEntity.status(400).body("cannot be empty");
         }
-
 
         Empleado empleado = new Empleado();
         empleado.setNombre(empleadoDTO.nombre());
@@ -78,11 +78,19 @@ public class EmpleadoController {
         return ResponseEntity.status(200).body(empleado);
     }
 
-    @GetMapping("/area/{area}")
-    public List<Empleado> findByArea(@PathVariable int area) {
-        Area area1 = areaService.findById(area);
-        return empleadoService.findByArea(area1);
-    }
+  @PostMapping ("/findByArea")
+  public List<Empleado> findByArea(@RequestBody Map<String, String> body){
+    String areaStr = body.get("area");
+    Area area = areaService.findByNombre(areaStr);
+
+    return empleadoService.findByArea(area);
+  }
+
+//    @GetMapping("/area/{area}")
+//    public List<Empleado> findByArea(@PathVariable int area) {
+//        Area area1 = areaService.findById(area);
+//        return empleadoService.findByArea(area1);
+//    }
 
     @PutMapping("/{id}")
     public ResponseEntity<Empleado> findById(@PathVariable int id, @RequestBody EmpleadoDTO empleadoDTO){
@@ -167,20 +175,7 @@ public class EmpleadoController {
                     empleadoService.save(empleado);
                     break;
             }
-
-
-//            empleado.getCargo().getPresupuesto().setMontoKpi(ultimo_presupuesto.getMontoKpi());
-//            List<Puntaje>listaPuntaje=puntajeService.list();
-//            for(Puntaje puntaje:listaPuntaje){
-//                if(puntaje.getEmpleado().getId().equals(empleado.getId())){
-//                    empleado.setRendimiento((double) (puntaje.getPuntajeTotal() * 100) /70);
-//                }else{
-//                    empleado.setRendimiento(0);
-//                }
-//            }
         }
-
-
     }
 }
 

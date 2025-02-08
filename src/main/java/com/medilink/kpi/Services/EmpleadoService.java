@@ -28,6 +28,10 @@ public class EmpleadoService {
         return repository.findAll();
     }
 
+    public List<Empleado> listByArea(Area area){
+      return repository.findAllByArea(area);
+    }
+
     public Empleado findById(int id){
         return repository.findById(id).orElse(null);
     }
@@ -37,7 +41,7 @@ public class EmpleadoService {
     }
 
     public List<Empleado> findByArea(Area area){
-        return repository.findByArea(area);
+        return repository.findAllByArea(area);
     }
 
 

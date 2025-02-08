@@ -11,17 +11,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity(name = "usuario")
 public class Usuario {
-
-  public Usuario(LocalDate fechaCreacion, String nombres, String apellidos, String nombreUsuario, String contrasena, TipoUsuario tipoUsuario, Sucursal sucursal) {
-    this.fechaCreacion = fechaCreacion;
-    this.nombres = nombres;
-    this.apellidos = apellidos;
-    this.nombreUsuario = nombreUsuario;
-    this.contrasena = contrasena;
-    this.tipoUsuario = tipoUsuario;
-    this.sucursal = sucursal;
-  }
-
   @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario", nullable = false)
@@ -49,4 +38,18 @@ public class Usuario {
     @ManyToOne
     @JoinColumn(name = "id_sucursal",  nullable = false)
     private Sucursal sucursal;
+
+    @Column(name = "area", nullable = false)
+    private String area;
+
+    public Usuario(LocalDate fechaCreacion, String nombres, String apellidos, String nombreUsuario, String contrasena, TipoUsuario tipoUsuario, Sucursal sucursal, String area) {
+      this.fechaCreacion = fechaCreacion;
+      this.nombres = nombres;
+      this.apellidos = apellidos;
+      this.nombreUsuario = nombreUsuario;
+      this.contrasena = contrasena;
+      this.tipoUsuario = tipoUsuario;
+      this.sucursal = sucursal;
+      this.area=area;
+  }
 }

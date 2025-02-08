@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/puntaje")
-@CrossOrigin
+@CrossOrigin("*")
 public class PuntajeController {
 
     @Autowired
@@ -63,7 +63,7 @@ public class PuntajeController {
         return puntajeService.list();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<?> edit(@PathVariable int id, @RequestBody EditPuntajeDTO puntajeDTO){
         Puntaje puntaje=puntajeService.findById(id);
         puntaje.setActitudesGestionComportamiento(puntajeDTO.actitudesGestionComportamiento());

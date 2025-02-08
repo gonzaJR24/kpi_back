@@ -30,4 +30,8 @@ public class AreaService {
     public void deleteById(int id){
         repository.deleteById(id);
     }
+
+    public Area findByNombre(String area){
+      return repository.findByNombreArea(area);
+    }
 }

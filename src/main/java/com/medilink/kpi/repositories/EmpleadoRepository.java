@@ -9,6 +9,5 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface EmpleadoRepository extends JpaRepository<Empleado, Integer> {
- public List<Empleado> findByArea(Area area);
-
+ public List<Empleado> findAllByArea(Area area);
 }

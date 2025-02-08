@@ -51,11 +51,17 @@ public class AreaController {
         return ResponseEntity.status(201).body(areaDTO);
     }
 
-    @GetMapping
-    public List<Area> list() {
-        actualizarRendimiento();
-        return areaService.list();
+    @GetMapping("/area/{area}")
+    public ResponseEntity<?> area(@PathVariable String area) {
+        Area area1=areaService.findByNombre(area);
+        return ResponseEntity.status(200).body(area1.getNombreArea());
     }
+
+  @GetMapping
+  public List<Area> list() {
+    actualizarRendimiento();
+    return areaService.list();
+  }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> edit(@PathVariable int id, @RequestBody AreaDTO areaDTO){
