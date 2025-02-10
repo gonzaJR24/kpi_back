@@ -54,4 +54,10 @@ public class Puntaje {
     @Column(name = "comentario", nullable = false)
     private String comentario;
 
+    @Column
+    private int mes;
+
+    @Column
+    private int anio;
+
 }

@@ -24,4 +24,12 @@ public class PuntajeService {
     public Puntaje findById(int id){
         return repository.findById(id).orElse(null);
     }
+
+    public void deleteById(int id){
+      repository.deleteById(id);
+    }
+
+    public List<Puntaje> findAllPuntaje(int mes, int anio){
+      return repository.findAllByMesAndAnio(mes, anio);
+    }
 }

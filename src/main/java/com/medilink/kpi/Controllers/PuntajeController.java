@@ -5,12 +5,15 @@ import com.medilink.kpi.Services.PuntajeService;
 import com.medilink.kpi.entities.Puntaje;
 import com.medilink.kpi.entities.dto.EditPuntajeDTO;
 import com.medilink.kpi.entities.dto.PuntajeDTO;
+import com.medilink.kpi.entities.dto.PuntajeRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/puntaje")
@@ -53,6 +56,8 @@ public class PuntajeController {
             puntaje.setCalificacionLider(0);
             puntaje.setPuntajeTotal(sumaPuntajes);
         }
+        puntaje.setMes(puntajeDTO.mes());
+        puntaje.setAnio((puntajeDTO.anio()));
 
         puntajeService.save(puntaje);
         return ResponseEntity.status(201).body(puntajeDTO);
@@ -78,5 +83,18 @@ public class PuntajeController {
         puntaje.setPuntajeTotal(sumaPuntajes);
         puntajeService.save(puntaje);
         return ResponseEntity.status(200).body(puntaje);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteById(@PathVariable int id){
+      puntajeService.deleteById(id);
+      Map<String, String> response=new HashMap<>();
+      response.put("response","deleted");
+      return ResponseEntity.status(200).body(response);
+    }
+
+    @PostMapping("/find")
+    public List<Puntaje> puntajes(@RequestBody PuntajeRequestDTO puntajeRequestDTO){
+      return puntajeService.findAllPuntaje(puntajeRequestDTO.mes(), puntajeRequestDTO.anio());
     }
 }

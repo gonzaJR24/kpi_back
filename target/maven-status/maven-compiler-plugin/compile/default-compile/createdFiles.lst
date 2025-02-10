@@ -1,5 +1,6 @@
 com\medilink\kpi\repositories\PresupuestoRepository.class
 com\medilink\kpi\Controllers\AreaController.class
+com\medilink\kpi\Controllers\LoginRequest.class
 com\medilink\kpi\Controllers\CargoController.class
 com\medilink\kpi\Services\UsuarioService.class
 com\medilink\kpi\repositories\CargoRepository.class
@@ -10,7 +11,9 @@ com\medilink\kpi\repositories\TipoUsuarioRepository.class
 com\medilink\kpi\entities\dto\CargoDTO.class
 com\medilink\kpi\repositories\PuntajeRepository.class
 com\medilink\kpi\entities\Presupuesto.class
+com\medilink\kpi\config\CustomUserDetails.class
 com\medilink\kpi\Services\AreaService.class
+com\medilink\kpi\Services\CustomUserDetailsService.class
 com\medilink\kpi\Services\PuntajeService.class
 com\medilink\kpi\entities\Puntaje.class
 com\medilink\kpi\Services\SucursalService.class
@@ -31,8 +34,11 @@ com\medilink\kpi\Services\EmpresaService.class
 com\medilink\kpi\Services\CargoService.class
 com\medilink\kpi\Controllers\PdfController.class
 com\medilink\kpi\Controllers\UsuarioController.class
+com\medilink\kpi\entities\dto\LoginUserDTO.class
+com\medilink\kpi\entities\dto\PuntajeRequestDTO.class
 com\medilink\kpi\entities\TipoUsuario.class
 com\medilink\kpi\repositories\UsuarioRepository.class
+com\medilink\kpi\config\SecurityConfig.class
 com\medilink\kpi\Controllers\EmpleadoController.class
 com\medilink\kpi\repositories\EmpleadoRepository.class
 com\medilink\kpi\entities\dto\EditPuntajeDTO.class

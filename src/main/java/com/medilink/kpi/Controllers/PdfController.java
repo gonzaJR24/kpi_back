@@ -39,8 +39,8 @@ public class PdfController {
             String imagePath = "https://github.com/gonzaJR24/kpi_front/blob/main/Logo-fondomorado.png?raw=true"; // Replace with your image path
             ImageData imageData = ImageDataFactory.create(imagePath);
             Image image = new Image(imageData);
-            image.setWidth(250);
-            image.setHeight(100);
+            image.setWidth(200);
+            image.setHeight(80);
             image.setMarginBottom(34);
 
             image.setHorizontalAlignment(com.itextpdf.layout.properties.HorizontalAlignment.CENTER);
@@ -101,11 +101,18 @@ public class PdfController {
 //            p8.setTextAlignment(TextAlignment.CENTER);
             doc.add(p8);
 
-//            Paragraph p9 = new Paragraph("Comentario: ");
-//            p9.setFontSize(12);
-//            p9.setBackgroundColor(bgColour);
-//            p9.setTextAlignment(TextAlignment.CENTER);
-//            doc.add(p9);
+          Paragraph p9 = new Paragraph("Rendimiento: " + pdfDTO.rendimiento());
+          p9.setFontSize(10);
+//            p8.setBackgroundColor(bgColour);
+//            p8.setTextAlignment(TextAlignment.CENTER);
+          doc.add(p9);
+
+          p9.setFontSize(10);
+          p9.setBorder(new SolidBorder(1));
+          p9.setBackgroundColor(bgColour);
+          p9.setMarginTop(10);
+
+
 
             Paragraph p10 = new Paragraph(pdfDTO.comentario());
             p10.setFontSize(10);
@@ -115,6 +122,7 @@ public class PdfController {
             p10.setMarginTop(10);
 //            p10.setTextAlignment(TextAlignment.CENTER);
             doc.add(p10);
+
 
             Table table = new Table(UnitValue.createPercentArray(2)).useAllAvailableWidth();
             table.setMarginTop(50);
