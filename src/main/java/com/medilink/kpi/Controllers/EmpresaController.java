@@ -58,24 +58,24 @@ public class EmpresaController {
     }
 
 
-    public void cargarPresupuesto(Empresa empresa) {
-        double porcientoKpi2 = (empresa.getProgresoEmpresa() * 100.0) / empresa.getValorMeta();
-        DecimalFormat decimalFormat=new DecimalFormat("#.#");
-        double porcientoKpi= Double.parseDouble(decimalFormat.format(porcientoKpi2));
+  public void cargarPresupuesto(Empresa empresa) {
+    double porcientoKpi2 = (empresa.getProgresoEmpresa() * 100.0) / empresa.getValorMeta();
+    DecimalFormat decimalFormat = new DecimalFormat("#.#");
+    String formattedString = decimalFormat.format(porcientoKpi2).replace(",", ".");
+    double porcientoKpi = Double.parseDouble(formattedString);
 
-        // Crear Presupuesto
-        Presupuesto presupuesto = new Presupuesto();
+    // Crear Presupuesto
+    Presupuesto presupuesto = new Presupuesto();
 
-        if (porcientoKpi < 90 ) {
-            presupuesto.setMontoKpi(0);
-            presupuestoService.save(presupuesto);
-        } else if (porcientoKpi >= 90 && porcientoKpi < 101) {
-            presupuesto.setMontoKpi(empresa.getProgresoEmpresa() * 0.01);
-            presupuestoService.save(presupuesto);
-        } else if (porcientoKpi > 101) {
-            presupuesto.setMontoKpi(empresa.getProgresoEmpresa() * 0.02);
-            presupuestoService.save(presupuesto);
-        }
+    if (porcientoKpi < 90) {
+      presupuesto.setMontoKpi(0);
+    } else if (porcientoKpi >= 90 && porcientoKpi < 101) {
+      presupuesto.setMontoKpi(empresa.getProgresoEmpresa() * 0.01);
+    } else if (porcientoKpi > 101) {
+      presupuesto.setMontoKpi(empresa.getProgresoEmpresa() * 0.02);
     }
+    presupuestoService.save(presupuesto);
+  }
+
 
 }

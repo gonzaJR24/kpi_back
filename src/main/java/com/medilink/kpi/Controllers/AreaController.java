@@ -21,7 +21,7 @@ import java.util.*;
 public class AreaController {
 
     private static final int NUMERO_DE_CRITERIOS = 6;
-    private final List<String> NOMBRE_AREAS = Arrays.asList("Productividad", "Servicios Generales", "Direccion Medica", "Facturacion", "Operaciones", "Contabilidad");
+    private final List<String> NOMBRE_AREAS = Arrays.asList("Productividad", "Direccion Medica", "Facturacion", "Operaciones", "Contabilidad");
 
     @Autowired
     private AreaService areaService;

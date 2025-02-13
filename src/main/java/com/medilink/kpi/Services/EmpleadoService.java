@@ -22,6 +22,7 @@ public class EmpleadoService {
 
     public void save(Empleado empleado) {
         repository.save(empleado);
+
     }
 
     public List<Empleado> list() {
@@ -71,7 +72,7 @@ public class EmpleadoService {
             }
         }
 
-        // Calcular el porcentaje
+             // Calcular el porcentaje
         double base = ultimo_presupuesto.getMontoKpi() / (numeroOperativosD + (numeroOperativosC * 2) + (numeroOperativosB * 3) + (numeroOperativosA * 4));
         List<Empleado> totalEmpleados = empleados;
         for (Empleado empleado : totalEmpleados) {
