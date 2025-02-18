@@ -60,4 +60,6 @@ public class Puntaje {
     @Column
     private int anio;
 
+    @Column
+    private String evaluador;
 }

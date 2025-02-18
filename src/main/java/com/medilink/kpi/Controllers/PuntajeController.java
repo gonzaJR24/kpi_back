@@ -23,56 +23,56 @@ import java.util.Map;
 @CrossOrigin
 public class PuntajeController {
 
-    @Autowired
-    private PuntajeService puntajeService;
+  @Autowired
+  private PuntajeService puntajeService;
 
-    @Autowired
-    private EmpleadoService empleadoService;
+  @Autowired
+  private EmpleadoService empleadoService;
 
-    @Autowired
-    private PresupuestoService presupuestoService;
+  @Autowired
+  private PresupuestoService presupuestoService;
 
-    @PostMapping
-    public ResponseEntity<?> save(@RequestBody PuntajeDTO puntajeDTO){
-        if(puntajeDTO==null){
-            return ResponseEntity.status(400).body("Invalid or empty value");
-        }
-        Puntaje puntaje=new Puntaje();
-        puntaje.setAusenciaPuntualidad(puntajeDTO.ausenciaPuntualidad());
-        puntaje.setEspecifico1(puntajeDTO.especifico1());
-        puntaje.setEspecifico2(puntajeDTO.especifico2());
-        puntaje.setNps(puntajeDTO.nps());
-        puntaje.setActitudesGestionComportamiento(puntajeDTO.actitudesGestionComportamiento());
-        puntaje.setCalificacionLider(puntajeDTO.calificacionLider());
-
-        int sumaPuntajes=puntajeDTO.ausenciaPuntualidad()+puntajeDTO.especifico1()+puntajeDTO.especifico2()+puntajeDTO.nps()+
-                puntajeDTO.actitudesGestionComportamiento()+puntajeDTO.calificacionLider();
-
-        puntaje.setPuntajeTotal(sumaPuntajes);
-        puntaje.setComentario(puntajeDTO.comentario());
-        puntaje.setEmpleado(empleadoService.findById(puntajeDTO.empleado()));
-        puntaje.setFechaEvaluacion(LocalDate.now());
-
-        if(puntajeDTO.especifico1()<2 || puntajeDTO.especifico2()<2){
-            puntaje.setAusenciaPuntualidad(0);
-            puntaje.setEspecifico1(0);
-            puntaje.setEspecifico2(0);
-            puntaje.setNps(0);
-            puntaje.setActitudesGestionComportamiento(0);
-            puntaje.setCalificacionLider(0);
-            puntaje.setPuntajeTotal(sumaPuntajes);
-        }
-        puntaje.setMes(puntajeDTO.mes());
-        puntaje.setAnio((puntajeDTO.anio()));
-
-        puntajeService.save(puntaje);
-        return ResponseEntity.status(201).body(puntajeDTO);
+  @PostMapping
+  public ResponseEntity<?> save(@RequestBody PuntajeDTO puntajeDTO){
+    if(puntajeDTO==null){
+      return ResponseEntity.status(400).body("Invalid or empty value");
     }
+    Puntaje puntaje=new Puntaje();
+    puntaje.setAusenciaPuntualidad(puntajeDTO.ausenciaPuntualidad());
+    puntaje.setEspecifico1(puntajeDTO.especifico1());
+    puntaje.setEspecifico2(puntajeDTO.especifico2());
+    puntaje.setNps(puntajeDTO.nps());
+    puntaje.setActitudesGestionComportamiento(puntajeDTO.actitudesGestionComportamiento());
+    puntaje.setCalificacionLider(puntajeDTO.calificacionLider());
 
-    @GetMapping
-    public List<Puntaje> list(){
-        return puntajeService.list();
+    int sumaPuntajes=puntajeDTO.ausenciaPuntualidad()+puntajeDTO.especifico1()+puntajeDTO.especifico2()+puntajeDTO.nps()+
+      puntajeDTO.actitudesGestionComportamiento()+puntajeDTO.calificacionLider();
+
+    puntaje.setPuntajeTotal(sumaPuntajes);
+    puntaje.setComentario(puntajeDTO.comentario());
+    puntaje.setEmpleado(empleadoService.findById(puntajeDTO.empleado()));
+    puntaje.setFechaEvaluacion(LocalDate.now());
+
+    if(puntajeDTO.especifico1()<2 || puntajeDTO.especifico2()<2){
+      puntaje.setAusenciaPuntualidad(0);
+      puntaje.setEspecifico1(0);
+      puntaje.setEspecifico2(0);
+      puntaje.setNps(0);
+      puntaje.setActitudesGestionComportamiento(0);
+      puntaje.setCalificacionLider(0);
+      puntaje.setPuntajeTotal(sumaPuntajes);
     }
+    puntaje.setMes(puntajeDTO.mes());
+    puntaje.setAnio((puntajeDTO.anio()));
+
+    puntajeService.save(puntaje);
+    return ResponseEntity.status(201).body(puntajeDTO);
+  }
+
+  @GetMapping
+  public List<Puntaje> list(){
+    return puntajeService.list();
+  }
 
   @PutMapping("{id}")
   public ResponseEntity<?> edit(@PathVariable int id, @RequestBody EditPuntajeDTO puntajeDTO) {
@@ -163,16 +163,18 @@ public class PuntajeController {
     }
   }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable int id){
-      puntajeService.deleteById(id);
-      Map<String, String> response=new HashMap<>();
-      response.put("response","deleted");
-      return ResponseEntity.status(200).body(response);
-    }
+  @DeleteMapping("/{id}")
+  public ResponseEntity<?> deleteById(@PathVariable int id){
+    puntajeService.deleteById(id);
+    Map<String, String> response=new HashMap<>();
+    response.put("response","deleted");
+    return ResponseEntity.status(200).body(response);
+  }
 
-    @PostMapping("/find")
-    public List<Puntaje> puntajes(@RequestBody PuntajeRequestDTO puntajeRequestDTO){
-      return puntajeService.findAllPuntaje(puntajeRequestDTO.mes(), puntajeRequestDTO.anio());
-    }
+  @PostMapping("/find")
+  public List<Puntaje> puntajes(@RequestBody PuntajeRequestDTO puntajeRequestDTO){
+    List<Puntaje> puntajes1=puntajeService.findAllPuntaje(puntajeRequestDTO.mes(), puntajeRequestDTO.anio());
+    puntajes1=puntajeService.findAllPuntaje(puntajeRequestDTO.mes(), puntajeRequestDTO.anio());
+    return puntajes1;
+  }
 }

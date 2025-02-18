@@ -1,5 +1,6 @@
 package com.medilink.kpi.Services;
 
+import com.medilink.kpi.entities.Empleado;
 import com.medilink.kpi.entities.Puntaje;
 import com.medilink.kpi.repositories.PuntajeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +32,9 @@ public class PuntajeService {
 
     public List<Puntaje> findAllPuntaje(int mes, int anio){
       return repository.findAllByMesAndAnio(mes, anio);
+    }
+
+    public List<Puntaje> findByEmpleado(Empleado empleado){
+      return repository.findByEmpleado(empleado);
     }
 }

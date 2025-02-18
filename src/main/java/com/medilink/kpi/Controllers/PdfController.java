@@ -22,7 +22,7 @@ import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.layout.element.Image;
 import java.io.ByteArrayOutputStream;
-
+import java.text.DecimalFormat;
 
 
 @RestController
@@ -83,7 +83,7 @@ public class PdfController {
 //            p5.setTextAlignment(TextAlignment.CENTER);
             doc.add(p5);
 
-            Paragraph p6 = new Paragraph("Lider Inmediato: " + pdfDTO.lider());
+            Paragraph p6 = new Paragraph("Lider Inmediato: " + pdfDTO.evaluador());
             p6.setFontSize(10);
 //            p6.setBackgroundColor(bgColour);
 //            p6.setTextAlignment(TextAlignment.CENTER);
@@ -95,13 +95,14 @@ public class PdfController {
 //            p7.setTextAlignment(TextAlignment.CENTER);
             doc.add(p7);
 
-            Paragraph p8 = new Paragraph("Monto final: " + pdfDTO.montofinal());
+            DecimalFormat f = new DecimalFormat("##.00");
+            Paragraph p8 = new Paragraph("Monto final: " + "RD$"+f.format(pdfDTO.montofinal()));
             p8.setFontSize(10);
 //            p8.setBackgroundColor(bgColour);
 //            p8.setTextAlignment(TextAlignment.CENTER);
             doc.add(p8);
 
-          Paragraph p9 = new Paragraph("Rendimiento: " + pdfDTO.rendimiento());
+          Paragraph p9 = new Paragraph("Rendimiento: " + f.format(pdfDTO.rendimiento()));
           p9.setFontSize(10);
 //            p8.setBackgroundColor(bgColour);
 //            p8.setTextAlignment(TextAlignment.CENTER);

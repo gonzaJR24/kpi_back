@@ -164,4 +164,3 @@ public class EmpleadoController {
     return ResponseEntity.status(200).body(empleado);
   }
 }
-
